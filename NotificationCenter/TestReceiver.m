@@ -35,9 +35,9 @@
 {
     if ([[notification name] isEqualToString:@"TestNotification"]) {
         NSDictionary *receivedMessage = notification.userInfo;
-        NSString *message = [receivedMessage objectForKey:@"messageKey"];
+        _message = [receivedMessage objectForKey:@"messageKey"];
         
-        NSLog(@"Receiver %lu Message: %@",_ID, message);
+        NSLog(@"Receiver %lu Message: %@",_ID, _message);
     }
     
 }

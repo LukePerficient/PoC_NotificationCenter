@@ -11,6 +11,7 @@
 @interface TestReceiver : NSObject
 
 @property NSInteger ID;
+@property (strong, nonatomic) NSString *message;
 
 - (id) initWithId:(NSInteger)defaultId;
 - (void) receiveTestNotification:(NSNotification *) notification;

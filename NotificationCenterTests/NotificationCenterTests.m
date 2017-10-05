@@ -7,8 +7,13 @@
 //
 
 #import <XCTest/XCTest.h>
+#import "TestObserver.h"
+#import "TestReceiver.h"
 
 @interface NotificationCenterTests : XCTestCase
+
+@property (strong,nonatomic) TestObserver *observer;
+@property (strong,nonatomic) NSMutableArray<TestReceiver *> *receivers;
 
 @end
 
@@ -16,24 +21,47 @@
 
 - (void)setUp {
     [super setUp];
-    // Put setup code here. This method is called before the invocation of each test method in the class.
+    _observer = [[TestObserver alloc] init];
+    _receivers = [[NSMutableArray<TestReceiver *> alloc] init];
 }
 
 - (void)tearDown {
-    // Put teardown code here. This method is called after the invocation of each test method in the class.
+    _observer = nil;
+    _receivers = nil;
     [super tearDown];
 }
 
-- (void)testExample {
-    // This is an example of a functional test case.
-    // Use XCTAssert and related functions to verify your tests produce the correct results.
+- (void)testAddReceiversToObserverClass {
+    // Add receivers to observer
+    [_receivers addObject:[[TestReceiver alloc] initWithId:1]];
+    [_receivers addObject:[[TestReceiver alloc] initWithId:2]];
+    [_receivers addObject:[[TestReceiver alloc] initWithId:3]];
+    
+    // Send message to all receivers
+    [_observer notifyReceivers:@"Hello Receivers"];
+    
+    // Verify receivers were added by validating they received the message
+    XCTAssertEqual(_receivers[0].message, @"Hello Receivers");
+    XCTAssertEqual(_receivers[1].message, @"Hello Receivers");
+    XCTAssertEqual(_receivers[2].message, @"Hello Receivers");
 }
 
-- (void)testPerformanceExample {
-    // This is an example of a performance test case.
-    [self measureBlock:^{
-        // Put the code you want to measure the time of here.
-    }];
+- (void)testRemoveReceiversFromObserverClass {
+    // Add receivers to observer
+    [_receivers addObject:[[TestReceiver alloc] initWithId:1]];
+    [_receivers addObject:[[TestReceiver alloc] initWithId:2]];
+    [_receivers addObject:[[TestReceiver alloc] initWithId:3]];
+    
+    // Send message to all receivers
+    [_observer notifyReceivers:@"Hello Receivers"];
+    
+    // Remove last added receiver from observer
+    [_receivers removeObject:_receivers[2]];
+    
+    // Verify receivers were added by validating they received the message
+    XCTAssert(_receivers[0] != nil);
+    XCTAssert(_receivers[1] != nil);
+    XCTAssertEqual([_receivers count], 2);
 }
 
 @end
